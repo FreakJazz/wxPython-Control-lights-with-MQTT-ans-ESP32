@@ -16,7 +16,38 @@ class MyFrame(wx.Frame):
         wx.Frame.__init__(self, parent, title=title, size=(800,600))
         self.InitUI()
 
-        
+    def InitUI(self):    
+        # In order to get principal menu
+        menubar = wx.MenuBar() 
+        # Elements of the principal menu
+        fileMenu = wx.Menu() 
+        aboutMenu = wx.Menu()
+        helpMenu = wx.Menu()
+
+        newitem = wx.MenuItem(fileMenu,wx.ID_NEW, text = "Connect",kind = wx.ITEM_NORMAL)  
+        fileMenu.AppendItem(newitem) 
+            
+        fileMenu.AppendSeparator()
+            
+        controllightMenu = wx.Menu() 
+        copyItem = wx.MenuItem(controllightMenu, 100,text = "copy",kind = wx.ITEM_NORMAL)   
+        fileMenu.AppendMenu(wx.ID_ANY, "Control Light", controllightMenu) 
+
+        fileMenu.AppendSeparator() 
+                    
+        quit = wx.MenuItem(fileMenu, wx.ID_EXIT, '&Quit\tCtrl+Q') 
+            
+        fileMenu.AppendItem(quit) 
+        menubar.Append(fileMenu, '&Menu') 
+        menubar.Append(aboutMenu, '&About')
+        menubar.Append(helpMenu, '&Help')
+
+        self.SetMenuBar(menubar)
+		
+        self.SetMenuBar(menubar) 
+        self.text = wx.TextCtrl(self,-1, style = wx.EXPAND|wx.TE_MULTILINE) 
+        self.Bind(wx.EVT_MENU, self.menuhandler) 
+
         # CONFIGURACION MQTT
         # Etiquetas ...
         self.labelA = wx.StaticText(self, wx.ID_ANY, "A", pos=(10,10), size=(80,25))
@@ -39,20 +70,15 @@ class MyFrame(wx.Frame):
         # Active Window
         self.Show(True)
 
-    def InitUI(self):
-        menubar = wx.MenuBar()
-        fileMenu = wx.Menu()
-        fitem = fileMenu.Append(wx.ID_EXIT, 'Quit', 'Salir de la aplicación')
-        menubar.Append(fileMenu, '&File')
-        self.SetMenuBar(menubar)
-        self.Bind(wx.EVT_MENU, self.OnQuit, fitem)
-        self.SetSize((300, 200))
-        self.SetTitle('Menú simple')
-        self.Centre()
+        self.SetSize((350, 250)) 
+        self.Centre() 
         self.Show(True)
-    def OnQuit(self, e):
-        self.Close()
-
+		
+    def menuhandler(self, event): 
+        id = event.GetId() 
+        if id == wx.ID_NEW: 
+            self.text.AppendText("new"+"\n")
+        
 # Main program
 if __name__ == "__main__":                  # Especial function main
     app = wx.App(False)                     # Call framework WX
