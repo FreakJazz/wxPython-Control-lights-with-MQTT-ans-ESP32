@@ -13,16 +13,34 @@ class Principal(wx.Frame):
         self.InitUI() 
         self.Centre()
         self.Show()
+
             
     def InitUI(self):
-
+        self.panel = wx.Panel(self)
+        self.SetBackgroundColour("#FFFCF5")
         # Create elements
         sz = wx.BoxSizer(wx.VERTICAL)  
         btn_config_MQTT = wx.Button(self,-1, "MQTT Config")
-        sz.Add(btn_config_MQTT,1,wx.EXPAND|wx.ALL, 100)
+        sz.Add(btn_config_MQTT,1,wx.EXPAND|wx.ALL,100)
+
+         # Light1
+        self.lbl_title1 = wx.StaticText(self, wx.ID_ANY, "LIGHT 1", pos=(10,10), size=(80,25))
+        self.lbl_state1 = wx.StaticText(self, wx.ID_ANY, "State: ", pos=(10,40), size=(80,25))
+        self.btn_light1 = wx.Button(self, wx.ID_ANY, "ON", pos=(55,70), size=(40,30))
+        self.sld1 = wx.Slider(self, -1, 50, 0, 255, (10, 120), (250, -1),wx.SL_AUTOTICKS | wx.SL_HORIZONTAL | wx.SL_LABELS)
 
         # Events
         self.Bind(wx.EVT_BUTTON, self.click_MQTT, btn_config_MQTT)
+        self.Bind(wx.EVT_BUTTON, self.fn_Enviar1, self.btn_light1)
+        self.Bind(wx.EVT_SCROLL, self.OnSliderScroll1, self.sld1)
+
+    def OnSliderScroll1(self, event):
+        Principal.light=1
+        Principal.obj1 = event.GetEventObject()
+        Principal.val1 = Principal.obj1.GetValue()
+
+    def fn_Enviar1(self, event):
+        print(Principal.val1)
 
     def click_MQTT(self, event):
        
@@ -33,13 +51,11 @@ class Principal(wx.Frame):
         
         self.aux_connection = False
 
-      
 class MQTT_Config(wx.Frame):
 
     def __init__(self, parent, title):
     # VARIABLES
         self.aux_connection = False
-
         wx.Frame.__init__(self, parent, title = title, size=(320, 350))
         self.InitMQTT() 
         self.Centre()
@@ -58,7 +74,7 @@ class MQTT_Config(wx.Frame):
         self.txt_port = wx.TextCtrl(self, wx.ID_ANY, "1883", pos=(100,70), size=(180,25))
         self.txt_user = wx.TextCtrl(self, wx.ID_ANY, "jazz23", pos=(100,100), size=(180,25))
         self.txt_pass = wx.TextCtrl(self, wx.ID_ANY, "12345", pos=(100,130), size=(180,25))
-        self.txt_topic = wx.TextCtrl(self, wx.ID_ANY, "lights", pos=(100,160), size=(180,25))
+        self.txt_topic = wx.TextCtrl(self, wx.ID_ANY, "dom/#", pos=(100,160), size=(180,25))
         # Botones
         self.btn_connect = wx.Button(self, wx.ID_ANY, "Connect", pos=(55,210), size=(80,30))
         self.btn_disconnect = wx.Button(self, wx.ID_ANY, "Disconnect", pos=(140,210), size=(80,30))
@@ -69,11 +85,11 @@ class MQTT_Config(wx.Frame):
         
         print(self.txt_broker)
         print(self.txt_port)
-        self.lbl_prueba = wx.StaticText(self, wx.ID_ANY, "PRUEBA ", pos=(100,240), size=(123,25))
+        self.lbl_prueba = wx.StaticText(self, wx.ID_ANY, "PRUEBA", pos=(100,240), size=(123,25))
 
         self.statusbar = self.CreateStatusBar()
         self.statusbar.SetStatusText('Ready')
-
+    
     ###### MQTT CONNECT FUNCTION ######
     def fn_connect(self, event):
         self.host = self.txt_broker.GetValue()
@@ -98,15 +114,12 @@ class MQTT_Config(wx.Frame):
             self.client.username_pw_set(self.username,self.password)    # Username and Password
             #client.loop_forever()
             self.client.loop()
-            
-
             self.lbl_prueba.SetLabelText(self.host)
 
     ####### FUNCTION DISCONNECT ######
     def fn_disconnect(self, event):
         self.client.disconnect()
         
-
     ####### FUNCTION ON CONNECT ######
     def on_connect(self,client, userdata, flags, rc):
         print('Connected(%s)',self.client._client_id)

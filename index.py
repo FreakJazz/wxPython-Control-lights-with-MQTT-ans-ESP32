@@ -12,19 +12,44 @@ print (wx.version())
 
 class Principal(wx.Frame):
     def __init__(self, parent, title):
-        # Define Window
-        self.cl_fondo = "#FF2345"
-        wx.Frame.__init__(self, parent, title=title, size=(600,500))
-        self.InitUI()
-
         
+        wx.Frame.__init__(self, parent, title=title, size=(380,500))
+        self.InitUI()
         self.Centre(True)
         self.Show(True)
 
-    def InitUI(self):    
-
+    def InitUI(self):
+        
         self.panel = wx.Panel(self)
         self.SetBackgroundColour("#FFFCF5")
+        
+        ##### FUNCTION PRINCIPAL #####
+        # Light1
+        self.lbl_title1 = wx.StaticText(self, wx.ID_ANY, "LIGHT 1", pos=(10,10), size=(80,25))
+        self.lbl_state1 = wx.StaticText(self, wx.ID_ANY, "State: ", pos=(10,40), size=(80,25))
+        self.btn_light1 = wx.Button(self, wx.ID_ANY, "ON", pos=(300,70), size=(40,30))
+        #self.sld1 = wx.Slider(self, -1, value=100, minValue=0, maxValue=250,style=wx.SL_HORIZONTAL)
+        self.sld1 = wx.Slider(self, -1, 50, 0, 255, (10, 70), (250, -1),wx.SL_AUTOTICKS | wx.SL_HORIZONTAL | wx.SL_LABELS)
+
+        # Light2
+        self.lbl_title2 = wx.StaticText(self, wx.ID_ANY, "LIGHT 2", pos=(10,150), size=(80,25))
+        self.lbl_state2 = wx.StaticText(self, wx.ID_ANY, "State: ", pos=(10,180), size=(80,25))
+        self.btn_light2 = wx.Button(self, wx.ID_ANY, "ON", pos=(300,210), size=(40,30))
+        self.sld2 = wx.Slider(self, -1, 50, 0, 255, (10, 210), (250, -1),wx.SL_AUTOTICKS | wx.SL_HORIZONTAL | wx.SL_LABELS)
+        
+        # Light3
+        self.lbl_title3 = wx.StaticText(self, wx.ID_ANY, "LIGHT 3", pos=(10,290), size=(80,25))
+        self.lbl_state3 = wx.StaticText(self, wx.ID_ANY, "State: ", pos=(10,320), size=(80,25))
+        self.btn_light3 = wx.Button(self, wx.ID_ANY, "ON", pos=(300,340), size=(40,30))
+        self.sld3 = wx.Slider(self, -1, 50, 0, 255, (10, 340), (250, -1),wx.SL_AUTOTICKS | wx.SL_HORIZONTAL | wx.SL_LABELS)
+        
+        self.Bind(wx.EVT_BUTTON, self.fn_Enviar1, self.btn_light1)
+        self.Bind(wx.EVT_BUTTON, self.fn_Enviar2, self.btn_light2)
+        self.Bind(wx.EVT_BUTTON, self.fn_Enviar3, self.btn_light3)
+        self.Bind(wx.EVT_SCROLL, self.OnSliderScroll1, self.sld1)
+        self.Bind(wx.EVT_SCROLL, self.OnSliderScroll2, self.sld2)
+        self.Bind(wx.EVT_SCROLL, self.OnSliderScroll3, self.sld3)
+
         # In order to get principal menu
         menubar = wx.MenuBar()
         # Elements of the principal menu
@@ -49,30 +74,21 @@ class Principal(wx.Frame):
         menubar.Append(helpMenu, '&Help')
 
         self.SetMenuBar(menubar)
-		
         self.SetMenuBar(menubar) 
         #self.text = wx.TextCtrl(self,-1, style = wx.EXPAND|wx.TE_MULTILINE) 
         self.Bind(wx.EVT_MENU, self.menuhandler) 
+    
+    def OnSliderScroll1(self, event):
+        self.obj1 = event.GetEventObject()
+        self.val1 = self.obj1.GetValue()
+    def OnSliderScroll2(self, event):
+        self.obj2 = event.GetEventObject()
+        self.val2 = self.obj2.GetValue()
+    def OnSliderScroll3(self, event):
+        self.obj3 = event.GetEventObject()
+        self.val3 = self.obj3.GetValue()
 
-        # Light1
-        self.lbl_title1 = wx.StaticText(self, wx.ID_ANY, "LIGHT 1", pos=(10,10), size=(80,25))
-        self.lbl_state1 = wx.StaticText(self, wx.ID_ANY, "State: ", pos=(10,40), size=(80,25))
-        self.btn_light1 = wx.Button(self, wx.ID_ANY, "ON", pos=(55,120), size=(40,30))
-        self.sld1 = wx.Slider(self, -1, 50, 0, 255, (10, 70), (250, -1),wx.SL_AUTOTICKS | wx.SL_HORIZONTAL | wx.SL_LABELS)
-
-        # Light2
-        self.lbl_title2 = wx.StaticText(self, wx.ID_ANY, "LIGHT 2", pos=(10,150), size=(80,25))
-        self.lbl_state2 = wx.StaticText(self, wx.ID_ANY, "State: ", pos=(10,180), size=(80,25))
-        self.btn_light2 = wx.Button(self, wx.ID_ANY, "ON", pos=(55,240), size=(40,30))
-        self.sld2 = wx.Slider(self, -1, 50, 0, 255, (10, 210), (250, -1),wx.SL_AUTOTICKS | wx.SL_HORIZONTAL | wx.SL_LABELS)
-        
-        # Light3
-        self.lbl_title3 = wx.StaticText(self, wx.ID_ANY, "LIGHT 3", pos=(10,270), size=(80,25))
-        self.lbl_state3 = wx.StaticText(self, wx.ID_ANY, "State: ", pos=(10,300), size=(80,25))
-        self.btn_light3 = wx.Button(self, wx.ID_ANY, "ON", pos=(55,400), size=(40,30))
-        self.sld3 = wx.Slider(self, -1, 50, 0, 255, (10, 330), (250, -1),wx.SL_AUTOTICKS | wx.SL_HORIZONTAL | wx.SL_LABELS)
-        
-    def menuhandler(self, event): 
+    def menuhandler(self, event):
         id = event.GetId()
         if id == wx.ID_NEW: 
             self.config = MQTT_Config(None,"MQTT Config")
@@ -84,6 +100,14 @@ class Principal(wx.Frame):
         print("config")
         print(self.config.get_host())
 
+    def fn_Enviar1(self, event):
+        print(self.val1)
+        
+    def fn_Enviar2(self, event):
+        print(self.val2)
+        
+    def fn_Enviar3(self, event):
+        print(self.val3)
 
 class MQTT_Config(wx.Frame):
     
@@ -116,14 +140,17 @@ class MQTT_Config(wx.Frame):
         # Botones
         self.btn_connect = wx.Button(self, wx.ID_ANY, "Connect", pos=(55,210), size=(80,30))
         self.btn_disconnect = wx.Button(self, wx.ID_ANY, "Disconnect", pos=(140,210), size=(80,30))
-
+        self.btn_Enviar1 = wx.Button(self, wx.ID_ANY, "Enviar1", pos=(10,270), size=(80,30))
+        self.btn_Enviar2 = wx.Button(self, wx.ID_ANY, "Enviar2", pos=(90,270), size=(80,30))
+        self.btn_Enviar3 = wx.Button(self, wx.ID_ANY, "Enviar3", pos=(180,270), size=(80,30))
         #Eventos
         self.Bind(wx.EVT_BUTTON, self.fn_connect, self.btn_connect)
         self.Bind(wx.EVT_BUTTON, self.fn_disconnect, self.btn_disconnect)
+        self.Bind(wx.EVT_BUTTON, self.fn_Enviar1, self.btn_Enviar1)
+        self.Bind(wx.EVT_BUTTON, self.fn_Enviar2, self.btn_Enviar2)
+        self.Bind(wx.EVT_BUTTON, self.fn_Enviar3, self.btn_Enviar3)
 
         # Fonts style
-       
-        
         print(self.txt_broker)
         print(self.txt_port)
         self.lbl_prueba = wx.StaticText(self, wx.ID_ANY, "Disconnected", pos=(120,240), size=(123,25))
@@ -156,6 +183,7 @@ class MQTT_Config(wx.Frame):
 
             self.lbl_prueba.SetLabelText("Connected")
 
+            
     def get_host(self):
     
         return "hola"
@@ -178,9 +206,22 @@ class MQTT_Config(wx.Frame):
         print('payload: %s', message.payload)
         print('qos: %d', message.qos)
         print(message.payload.decode("utf-8"))
- 
+
+    def fn_Enviar1(self, event):
+        self.topic = "dom/light1"
+        self.client.subscribe(self.topic, qos=0) 
+        self.client.publish(self.topic, "soy la luz 1")
+    def fn_Enviar2(self, event):
+        self.topic = "dom/light2"
+        self.client.subscribe(self.topic, qos=0) 
+        self.client.publish(self.topic, "soy la luz 2")
+    def fn_Enviar3(self, event):
+        self.topic = "dom/light3"
+        self.client.subscribe(self.topic, qos=0) 
+        self.client.publish(self.topic, "soy la luz 3")
+         
 # Main program
 if __name__ == "__main__":                  # Especial function main
     app = wx.App(False)                     # Call framework WX
-    frame = Principal(None, 'Lights Control with ESP32')   # Create frame 
+    frame = Principal(None, "Lights Control with ESP32")   # Create frame 
     app.MainLoop()                          
