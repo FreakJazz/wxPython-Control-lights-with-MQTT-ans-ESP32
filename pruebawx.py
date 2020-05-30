@@ -35,15 +35,18 @@ class Principal(wx.Frame):
         self.Bind(wx.EVT_SCROLL, self.OnSliderScroll1, self.sld1)
 
     def OnSliderScroll1(self, event):
-        Principal.light=1
-        Principal.obj1 = event.GetEventObject()
-        Principal.val1 = Principal.obj1.GetValue()
+        self.obj1 = event.GetEventObject()
+        self.val1 = self.obj1.GetValue()
+        self.light = 1
 
+   
     def fn_Enviar1(self, event):
-        print(Principal.val1)
+        print(self.obj1)
+        print(self.light)
+        print(self.val1)
+        slider = MQTT_Config.send(self.val1)
 
     def click_MQTT(self, event):
-       
         MQTT_Config(None,"MQTT Config")
 
     def click_out(self, event):
@@ -51,7 +54,7 @@ class Principal(wx.Frame):
         
         self.aux_connection = False
 
-class MQTT_Config(wx.Frame):
+class MQTT_Config(Principal):
 
     def __init__(self, parent, title):
     # VARIABLES
@@ -133,6 +136,12 @@ class MQTT_Config(wx.Frame):
         print('payload: %s', message.payload)
         print('qos: %d', message.qos)
         print(message.payload.decode("utf-8"))
+
+    @classmethod
+    def send(cls,self, val1):
+        print(val1)
+        self.client.subscribe(topic, qos=0) 
+        self.client.publish(topic,val1)
  
 if __name__ == "__main__":                  # Especial function main
     app = wx.App() 
