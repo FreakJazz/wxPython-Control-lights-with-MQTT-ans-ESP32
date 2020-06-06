@@ -37,14 +37,14 @@ class Principal(wx.Frame):
     def OnSliderScroll1(self, event):
         self.obj1 = event.GetEventObject()
         self.val1 = self.obj1.GetValue()
-        self.light = 1
+        self.topic = "dom/light1"
 
    
     def fn_Enviar1(self, event):
         print(self.obj1)
-        print(self.light)
+        print(self.topic)
         print(self.val1)
-        slider = MQTT_Config.send(self.val1)
+        slider = MQTT_Config.send(self.val1, self.topic)
 
     def click_MQTT(self, event):
         MQTT_Config(None,"MQTT Config")
@@ -60,6 +60,22 @@ class MQTT_Config(Principal):
     # VARIABLES
         self.aux_connection = False
         wx.Frame.__init__(self, parent, title = title, size=(320, 350))
+        client =  mqtt.Client()
+        self.client = client
+        self.host = "broker.mqttdashboard.com"
+        self.port = 1883
+        self.username = "jazz23"
+        self.password = "12345"
+        self.topic = "dom/#"
+        self.keepalive = 60
+        self.clientid = "Clientjazz23"
+        
+        ##### FUNCTION PRINCIPAL #####
+        self.client = mqtt.Client()     # Client Identifier
+        self.client.on_connect = self.on_connect      # Conecction Function 
+        self.client.on_message = self.on_message      # Message Function
+        self.client.connect(self.host, self.port, self.keepalive)     # Host, terminal, keep alive
+        self.client.username_pw_set(self.username,self.password)    # Username and Password
         self.InitMQTT() 
         self.Centre()
         self.Show()
@@ -121,13 +137,15 @@ class MQTT_Config(Principal):
 
     ####### FUNCTION DISCONNECT ######
     def fn_disconnect(self, event):
-        self.client.disconnect()
+        #self.client.disconnect()
+        self.client.subscribe(self.topic, qos=0) 
+        self.client.publish(self.topic,'Se establecio la conexion')
         
     ####### FUNCTION ON CONNECT ######
     def on_connect(self,client, userdata, flags, rc):
         print('Connected(%s)',self.client._client_id)
-        client.subscribe(self.topic, qos=0) 
-        client.publish(self.topic,'Se establecio la conexion')
+        self.client.subscribe(self.topic, qos=0) 
+        self.client.publish(self.topic,'Se establecio la conexion')
 
     ####### FUNCTION ON MESSAGE ######
     def on_message(self,client, userdata, message):
@@ -137,11 +155,25 @@ class MQTT_Config(Principal):
         print('qos: %d', message.qos)
         print(message.payload.decode("utf-8"))
 
+    
+
     @classmethod
-    def send(cls,self, val1):
+    def send(cls, val1,topic):        
+        print(topic)
         print(val1)
-        self.client.subscribe(topic, qos=0) 
-        self.client.publish(topic,val1)
+        cls.send_mqtt(val1,topic)
+
+    def send_mqtt(self,val1,topic):
+        self.val1 = val1
+        self.topic = topic
+        self.client.subscribe(self.topic, qos=0)
+        self.client.publish(self.topic,self.val1)
+
+    ####### FUNCTION DISCONNECT ######
+    def fn_disconnect(self,event ):
+        #self.client.disconnect()
+        self.client.subscribe(self.topic, qos=0) 
+        self.client.publish(self.topic,'Se establecio la conexion')
  
 if __name__ == "__main__":                  # Especial function main
     app = wx.App() 
