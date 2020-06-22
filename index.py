@@ -182,11 +182,13 @@ class MQTT_Config(wx.Frame):
             
 
             self.lbl_prueba.SetLabelText("Connected")
+  
+    def send_mqtt(self, val, topic):
+        self.val1 = val
+        self.topic = topic
+        self.client.subscribe(self.topic, qos=0)
+        self.client.publish(self.topic,self.val)
 
-            
-    def get_host(self):
-    
-        return "hola"
 
     ####### FUNCTION DISCONNECT ######
     def fn_disconnect(self, event):

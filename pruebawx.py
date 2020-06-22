@@ -7,9 +7,10 @@ import wx
 
 class Principal(wx.Frame): 
 
-    def __init__(self, parent, title):
+    def __init__(self, parent=None, title=None):
         # VARIABLES
         wx.Frame.__init__(self, parent, title = title, size=(320, 130))
+        #self.mqtt_class = MQTT_Config(self,parent)
         self.InitUI() 
         self.Centre()
         self.Show()
@@ -39,22 +40,23 @@ class Principal(wx.Frame):
         self.val1 = self.obj1.GetValue()
         self.topic = "dom/light1"
 
-   
+    # Function in order to send a MQTT message
     def fn_Enviar1(self, event):
-        print(self.obj1)
+        val1 = self.val1
+        topic = self.topic
         print(self.topic)
         print(self.val1)
-        slider = MQTT_Config.send(self.val1, self.topic)
+        self.mqtt_class.send_mqtt(val1, topic)
 
     def click_MQTT(self, event):
-        MQTT_Config(None,"MQTT Config")
+       self.mqtt_class = MQTT_Config(None,"MQTT Config")
 
     def click_out(self, event):
         print("OUT")
         
         self.aux_connection = False
 
-class MQTT_Config(Principal):
+class MQTT_Config(wx.Frame):
 
     def __init__(self, parent, title):
     # VARIABLES
@@ -155,15 +157,7 @@ class MQTT_Config(Principal):
         print('qos: %d', message.qos)
         print(message.payload.decode("utf-8"))
 
-    
-
-    @classmethod
-    def send(cls, val1,topic):        
-        print(topic)
-        print(val1)
-        cls.send_mqtt(val1,topic)
-
-    def send_mqtt(self,val1,topic):
+    def send_mqtt(self, val1, topic):
         self.val1 = val1
         self.topic = topic
         self.client.subscribe(self.topic, qos=0)
