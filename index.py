@@ -175,15 +175,16 @@ class MQTT_Config(wx.Frame):
         self.txt_pass = wx.TextCtrl(self, wx.ID_ANY, "12345", pos=(100,130), size=(180,25))
         self.txt_topic = wx.TextCtrl(self, wx.ID_ANY, "lights", pos=(100,160), size=(180,25))
         # Buttons
-        self.btn_connect = wx.Button(self, wx.ID_ANY, "Connect", pos=(55,210), size=(80,30))
-        self.btn_disconnect = wx.Button(self, wx.ID_ANY, "Disconnect", pos=(140,210), size=(80,30))
+        self.btn_connect = wx.Button(self, wx.ID_ANY, "Connect", pos=(70,200), size=(80,30))
+        self.btn_disconnect = wx.Button(self, wx.ID_ANY, "Disconnect", pos=(170,200), size=(80,30))
         #Events
         self.Bind(wx.EVT_BUTTON, self.fn_connect, self.btn_connect)
         self.Bind(wx.EVT_BUTTON, self.fn_disconnect, self.btn_disconnect)
         # Fonts style
         print(self.txt_broker)
         print(self.txt_port)
-        self.lbl_prueba = wx.StaticText(self, wx.ID_ANY, "Disconnected", pos=(120,240), size=(123,25))
+        self.lbl_prueba = wx.StaticText(self, wx.ID_ANY, "State: ", pos=(10,240), size=(123,25))
+        self.lbl_prueba = wx.StaticText(self, wx.ID_ANY, "Disconnected", pos=(100,240), size=(123,25))
 
     ###### MQTT CONNECT FUNCTION ######
     def fn_connect(self, event):
