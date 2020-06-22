@@ -21,13 +21,15 @@ char msg[MSG_BUFFER_SIZE];
 int value = 0;
 
 // the number of the LED pin
-const int led1 = 16;  // 16 corresponds to GPIO16
+const int led1 = 2;  // 16 corresponds to GPIO16
 const int led2 = 39;
 const int led3 = 34;
 
 // setting PWM properties
 const int freq = 5000;
-const int ledChannel = 0;
+const int ledChannel1 = 0;
+const int ledChannel2 = 0;
+const int ledChannel3 = 0;
 const int resolution = 8;
 
 void callback(char* topic, byte* payload, unsigned int length) {
@@ -39,13 +41,21 @@ void callback(char* topic, byte* payload, unsigned int length) {
     incoming += (char)payload[i];
     Serial.print(incoming);
   }
+
+  //String(incoming).toInt();
+  uint32_t date = incoming.toInt();
+
+  date = ((date*1024)/100);
   Serial.println();
-  if (incoming=="1"){
-    digitalWrite(led,HIGH);
+  if (topic=="dom/light1"){
+    ledcWrite(ledChannel1, date);
     }
-  if (incoming=="0"){
-  digitalWrite(led,LOW);
-  }
+  if (topic=="dom/light2"){
+    ledcWrite(ledChannel2, date);
+    }
+  if (topic=="dom/light3"){
+    ledcWrite(ledChannel3, date);
+    }
 }
 
 // Reconected MQTT fuction
@@ -96,14 +106,14 @@ void setup()
 
   // Output Configuration
   // configure LED PWM functionalitites
-  ledcSetup(ledChannel, freq, resolution);
+  ledcSetup(ledChannel1, freq, resolution);
   
   // attach the channel to the GPIO to be controlled
-  ledcAttachPin(led1, ledChannel);
+  ledcAttachPin(led1, ledChannel1);
   // attach the channel to the GPIO to be controlled
-  ledcAttachPin(led2, ledChannel);
+  ledcAttachPin(led2, ledChannel2);
   // attach the channel to the GPIO to be controlled
-  ledcAttachPin(led3, ledChannel);
+  ledcAttachPin(led3, ledChannel3);
   
   pinMode(led1,OUTPUT);
   digitalWrite(led1,LOW);

@@ -29,7 +29,7 @@ class Principal(wx.Frame):
         self.lbl_state1 = wx.StaticText(self, wx.ID_ANY, "State: ", pos=(10,40), size=(80,25))
         self.btn_light1 = wx.Button(self, wx.ID_ANY, "ON", pos=(300,70), size=(40,30))
         #self.sld1 = wx.Slider(self, -1, value=100, minValue=0, maxValue=250,style=wx.SL_HORIZONTAL)
-        self.sld1 = wx.Slider(self, -1, 50, 0, 255, (10, 70), (250, -1),wx.SL_AUTOTICKS | wx.SL_HORIZONTAL | wx.SL_LABELS)
+        self.sld1 = wx.Slider(self, -1, 50, 0, 100, (10, 70), (250, -1),wx.SL_AUTOTICKS | wx.SL_HORIZONTAL | wx.SL_LABELS)
         self.btn_light1.Disable()
         self.sld1.Disable()
 
@@ -37,7 +37,7 @@ class Principal(wx.Frame):
         self.lbl_title2 = wx.StaticText(self, wx.ID_ANY, "LIGHT 2", pos=(10,150), size=(80,25))
         self.lbl_state2 = wx.StaticText(self, wx.ID_ANY, "State: ", pos=(10,180), size=(80,25))
         self.btn_light2 = wx.Button(self, wx.ID_ANY, "ON", pos=(300,210), size=(40,30))
-        self.sld2 = wx.Slider(self, -1, 50, 0, 255, (10, 210), (250, -1),wx.SL_AUTOTICKS | wx.SL_HORIZONTAL | wx.SL_LABELS)
+        self.sld2 = wx.Slider(self, -1, 50, 0, 100, (10, 210), (250, -1),wx.SL_AUTOTICKS | wx.SL_HORIZONTAL | wx.SL_LABELS)
         self.btn_light2.Disable()
         self.sld2.Disable()
 
@@ -45,7 +45,7 @@ class Principal(wx.Frame):
         self.lbl_title3 = wx.StaticText(self, wx.ID_ANY, "LIGHT 3", pos=(10,290), size=(80,25))
         self.lbl_state3 = wx.StaticText(self, wx.ID_ANY, "State: ", pos=(10,320), size=(80,25))
         self.btn_light3 = wx.Button(self, wx.ID_ANY, "ON", pos=(300,340), size=(40,30))
-        self.sld3 = wx.Slider(self, -1, 50, 0, 255, (10, 340), (250, -1),wx.SL_AUTOTICKS | wx.SL_HORIZONTAL | wx.SL_LABELS)
+        self.sld3 = wx.Slider(self, -1, 50, 0, 100, (10, 340), (250, -1),wx.SL_AUTOTICKS | wx.SL_HORIZONTAL | wx.SL_LABELS)
         self.btn_light3.Disable()
         self.sld3.Disable()
 
