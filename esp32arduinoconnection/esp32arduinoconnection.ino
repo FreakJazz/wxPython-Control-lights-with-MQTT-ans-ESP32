@@ -12,6 +12,9 @@ const char* clientid = "Clientjazz23";
 const char* username = "jazz23";
 const char* password = "12345";
 const char* topic = "dom/#";
+const char* topic_subscribe1 = "dom/light1";
+const char* topic_subscribe2 = "dom/light2";
+const char* topic_subscribe3 = "dom/light3";
 
 const char* ssid = "NETLIFE-FLIA. RODRIGUEZ";
 const char* pass = "172372rodriguez";
@@ -46,14 +49,17 @@ void callback(char* topic, byte* payload, unsigned int length) {
   uint32_t date = incoming.toInt();
 
   date = ((date*1024)/100);
-  Serial.println();
-  if (topic=="dom/light1"){
+  Serial.println(date);
+  if (topic==topic_subscribe1){
+    Serial.println("entro en el 1");
     ledcWrite(ledChannel1, date);
     }
-  if (topic=="dom/light2"){
+  if (topic==topic_subscribe2){
+    Serial.println("entro en el 2");
     ledcWrite(ledChannel2, date);
     }
-  if (topic=="dom/light3"){
+  if (topic==topic_subscribe3){
+    Serial.println("entro en el 3");
     ledcWrite(ledChannel3, date);
     }
 }
@@ -130,7 +136,15 @@ void loop()
   }
 
   if (client.connected()){
-     String str = "";
+     while (client.connected()){
+     //////////////
+       delay(10);
+       client.subscribe(topic_subscribe1,0);
+       delay(10);
+       client.subscribe(topic_subscribe2,2);
+       delay(10);
+       client.subscribe(topic_subscribe3,1);
+    }
     
     }
   client.loop();

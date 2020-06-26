@@ -8,7 +8,7 @@ import sys
 import paho.mqtt.client as mqtt    # Connect with the MQTT Library
 import time                         # Time Library
 import wx
-print (wx.version())
+#print (wx.version())
 
 class Principal(wx.Frame):
     def __init__(self, parent, title):
@@ -26,8 +26,8 @@ class Principal(wx.Frame):
         ##### FUNCTION PRINCIPAL #####
         # Light1
         self.lbl_title1 = wx.StaticText(self, wx.ID_ANY, "LIGHT 1", pos=(10,10), size=(80,25))
-        self.lbl_state1 = wx.StaticText(self, wx.ID_ANY, "State: ", pos=(10,40), size=(80,25))
-        self.btn_light1 = wx.Button(self, wx.ID_ANY, "ON", pos=(300,70), size=(40,30))
+        self.lbl_state1 = wx.StaticText(self, wx.ID_ANY, "The light 1 is ON ", pos=(10,40), size=(150,25))
+        self.btn_light1 = wx.Button(self, wx.ID_ANY, label="ON", pos=(300,70), size=(40,30))
         #self.sld1 = wx.Slider(self, -1, value=100, minValue=0, maxValue=250,style=wx.SL_HORIZONTAL)
         self.sld1 = wx.Slider(self, -1, 50, 0, 100, (10, 70), (250, -1),wx.SL_AUTOTICKS | wx.SL_HORIZONTAL | wx.SL_LABELS)
         self.btn_light1.Disable()
@@ -35,16 +35,16 @@ class Principal(wx.Frame):
 
         # Light2
         self.lbl_title2 = wx.StaticText(self, wx.ID_ANY, "LIGHT 2", pos=(10,150), size=(80,25))
-        self.lbl_state2 = wx.StaticText(self, wx.ID_ANY, "State: ", pos=(10,180), size=(80,25))
-        self.btn_light2 = wx.Button(self, wx.ID_ANY, "ON", pos=(300,210), size=(40,30))
+        self.lbl_state2 = wx.StaticText(self, wx.ID_ANY, "The light 1 is ON", pos=(10,180), size=(150,25))
+        self.btn_light2 = wx.Button(self, wx.ID_ANY,label = "ON", pos=(300,210), size=(40,30))
         self.sld2 = wx.Slider(self, -1, 50, 0, 100, (10, 210), (250, -1),wx.SL_AUTOTICKS | wx.SL_HORIZONTAL | wx.SL_LABELS)
         self.btn_light2.Disable()
         self.sld2.Disable()
 
         # Light3
         self.lbl_title3 = wx.StaticText(self, wx.ID_ANY, "LIGHT 3", pos=(10,290), size=(80,25))
-        self.lbl_state3 = wx.StaticText(self, wx.ID_ANY, "State: ", pos=(10,320), size=(80,25))
-        self.btn_light3 = wx.Button(self, wx.ID_ANY, "ON", pos=(300,340), size=(40,30))
+        self.lbl_state3 = wx.StaticText(self, wx.ID_ANY, "The light 1 is ON", pos=(10,320), size=(150,25))
+        self.btn_light3 = wx.Button(self, wx.ID_ANY, label = "ON", pos=(300,340), size=(40,30))
         self.sld3 = wx.Slider(self, -1, 50, 0, 100, (10, 340), (250, -1),wx.SL_AUTOTICKS | wx.SL_HORIZONTAL | wx.SL_LABELS)
         self.btn_light3.Disable()
         self.sld3.Disable()
@@ -94,14 +94,14 @@ class Principal(wx.Frame):
     def OnSliderScroll2(self, event):
         self.obj2 = event.GetEventObject()
         self.val2 = self.obj2.GetValue()
-        val = self.val1
+        val = self.val2
         topic = "dom/light2"
         self.mqtt_class.send_mqtt(val, topic)           # Send data to mqtt class
 
     def OnSliderScroll3(self, event):
         self.obj3 = event.GetEventObject()
         self.val3 = self.obj3.GetValue()
-        val = self.val1
+        val = self.val3
         topic = "dom/light3"
         self.mqtt_class.send_mqtt(val, topic)           # Send data to mqtt class
 
@@ -110,12 +110,6 @@ class Principal(wx.Frame):
         # Connect with MQTT
         if id == wx.ID_NEW: 
             self.mqtt_class  = MQTT_Config(None,"MQTT Config")      #to get the class mqtt
-            self.btn_light1.Enable()
-            self.sld1.Enable()
-            self.btn_light2.Enable()
-            self.sld2.Enable()
-            self.btn_light3.Enable()
-            self.sld3.Enable()
         # Exit 
         if id == wx.ID_EXIT:
             qui = wx.MessageDialog(None, 'Are you sure to quit?', 'Question',wx.YES_NO)
@@ -131,17 +125,51 @@ class Principal(wx.Frame):
         #print(self.config.get_host())
 
     def fn_Enviar1(self, event):
-        val = self.val1
+        state1 = self.btn_light1.GetLabel()
+        if (state1== "ON"):
+            self.sld1.Enable()
+            self.btn_light1.SetLabel("OFF")
+            self.lbl_prueba.SetLabelText("The light 1 is ON")
+            val = 100
+            
+        if (state1== "OFF"):
+            self.sld1.Disable()
+            self.btn_light1.SetLabel("ON")
+            self.lbl_prueba.SetLabelText("The light 1 is OFF")
+            val = 0
         topic = "dom/light1"
+        #self.btn_light1.Enable()
         self.mqtt_class.send_mqtt(val, topic)           # Send data to mqtt class
         
     def fn_Enviar2(self, event):
-        val = self.val2
+        state2 = self.btn_light2.GetLabel()
+        if (state2== "ON"):
+            self.sld2.Enable()
+            self.btn_light2.SetLabel("OFF")
+            self.lbl_prueba.SetLabelText("The light 2 is ON")
+            val = 100
+            
+        if (state2== "OFF"):
+            self.sld2.Disable()
+            self.btn_light2.SetLabel("ON")
+            self.lbl_prueba.SetLabelText("The light 2 is OFF")
+            val = 0
         topic = "dom/light2"
         self.mqtt_class.send_mqtt(val, topic)           # Send data to mqtt class
         
     def fn_Enviar3(self, event):
-        val = self.val3
+        state3 = self.btn_light3.GetLabel()
+        if (state3== "ON"):
+            self.sld3.Enable()
+            self.btn_light3.SetLabel("OFF")
+            self.lbl_prueba.SetLabelText("The light 3 is ON")
+            val = 100
+            
+        if (state3== "OFF"):
+            self.sld3.Disable()
+            self.btn_light3.SetLabel("ON")
+            self.lbl_prueba.SetLabelText("The light 3 is OFF")
+            val = 0
         topic = "dom/light3"
         self.mqtt_class.send_mqtt(val, topic)           # Send data to mqtt class
 
@@ -169,7 +197,7 @@ class MQTT_Config(wx.Frame):
         self.lbl_pass = wx.StaticText(self, wx.ID_ANY, "Password: ", pos=(10,130), size=(80,25))
         self.lbl_topic = wx.StaticText(self, wx.ID_ANY, "Topic: ", pos=(10,160), size=(80,25))
         # Inputs
-        self.txt_broker = wx.TextCtrl(self, wx.EXPAND|wx.ALL, "broker.mqttdashboard.com", pos=(100,40), size=(180,25))
+        self.txt_broker = wx.TextCtrl(self, wx.ID_ANY, "broker.mqttdashboard.com", pos=(100,40), size=(180,25))
         self.txt_port = wx.TextCtrl(self, wx.ID_ANY, "1883", pos=(100,70), size=(180,25))
         self.txt_user = wx.TextCtrl(self, wx.ID_ANY, "jazz23", pos=(100,100), size=(180,25))
         self.txt_pass = wx.TextCtrl(self, wx.ID_ANY, "12345", pos=(100,130), size=(180,25))
@@ -185,7 +213,7 @@ class MQTT_Config(wx.Frame):
         print(self.txt_port)
         self.lbl_prueba = wx.StaticText(self, wx.ID_ANY, "State: ", pos=(10,240), size=(123,25))
         self.lbl_prueba = wx.StaticText(self, wx.ID_ANY, "Disconnected", pos=(100,240), size=(123,25))
-
+        
     ###### MQTT CONNECT FUNCTION ######
     def fn_connect(self, event):
         self.host = self.txt_broker.GetValue()
@@ -212,6 +240,17 @@ class MQTT_Config(wx.Frame):
             self.client.loop()
             self.lbl_prueba.SetLabelText("Connected")
             self.connect = 1
+            frame.btn_light1.Enable()
+            frame.sld1.Enable()
+            frame.btn_light2.Enable()
+            frame.sld2.Enable()
+            frame.btn_light3.Enable()
+            frame.sld3.Enable()
+            self.txt_broker.Disable()
+            self.txt_port.Disable()
+            self.txt_user.Disable()
+            self.txt_pass.Disable()
+            self.txt_topic.Disable()
   
     def send_mqtt(self, val, topic):
         self.val = val
@@ -222,6 +261,18 @@ class MQTT_Config(wx.Frame):
     ####### FUNCTION DISCONNECT ######
     def fn_disconnect(self, event):
         self.client.disconnect()
+        self.lbl_prueba.SetLabelText("Disconnected")
+        frame.btn_light1.Disable()
+        frame.sld1.Disable()
+        frame.btn_light2.Disable()
+        frame.sld2.Disable()
+        frame.btn_light3.Disable()
+        frame.sld3.Disable()
+        self.txt_broker.Enable()
+        self.txt_port.Enable()
+        self.txt_user.Enable()
+        self.txt_pass.Enable()
+        self.txt_topic.Enable()
         
     ####### FUNCTION ON CONNECT ######
     def on_connect(self,client, userdata, flags, rc):
