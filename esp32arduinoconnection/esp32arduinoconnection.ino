@@ -11,7 +11,10 @@ const int keepalive = 60;
 const char* clientid = "Clientjazz23";
 const char* username = "jazz23";
 const char* password = "12345";
-const char* topic = "dom/#";
+const char* topic_root = "dom/#";
+const char* topic_subscribe1 = "dom/light1";
+const char* topic_subscribe2 = "dom/light2";
+const char* topic_subscribe3 = "dom/light3";
 
 const char* ssid = "NETLIFE-FLIA. RODRIGUEZ";
 const char* pass = "172372rodriguez";
@@ -32,7 +35,7 @@ const int ledChannel2 = 0;
 const int ledChannel3 = 0;
 const int resolution = 8;
 
-void callback(char* topic, byte* payload, unsigned int length) {
+void callback(char* topic_root, byte* payload, unsigned int length) {
   String incoming = "";
   Serial.print("Message arrived [");
   Serial.print(topic);
@@ -46,7 +49,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
   uint32_t date = incoming.toInt();
 
   date = ((date*1024)/100);
-  Serial.println();
+  Serial.println(date);
   if (topic=="dom/light1"){
     ledcWrite(ledChannel1, date);
     }
@@ -130,7 +133,21 @@ void loop()
   }
 
   if (client.connected()){
-     String str = "";
+     while (client.connected()){
+     //////////////
+     delay(1);
+     if(client.subscribe("dom/light1")){
+      println("You are subscribe to the topic: **dom/light1**");
+      }
+    if(client.subscribe("dom/light2")){
+      println("You are subscribe to the topic: **dom/light2**");
+      }
+    if(client.subscribe("dom/light3")){
+      println("You are subscribe to the topic: **dom/light3**");
+    }
+     
+    
+    }
     
     }
   client.loop();
