@@ -35,7 +35,7 @@ class Principal(wx.Frame):
 
         # Light2
         self.lbl_title2 = wx.StaticText(self, wx.ID_ANY, "LIGHT 2", pos=(10,150), size=(80,25))
-        self.lbl_state2 = wx.StaticText(self, wx.ID_ANY, "The light 1 is ON", pos=(10,180), size=(150,25))
+        self.lbl_state2 = wx.StaticText(self, wx.ID_ANY, "The light 2 is ON", pos=(10,180), size=(150,25))
         self.btn_light2 = wx.Button(self, wx.ID_ANY,label = "ON", pos=(300,210), size=(40,30))
         self.sld2 = wx.Slider(self, -1, 50, 0, 100, (10, 210), (250, -1),wx.SL_AUTOTICKS | wx.SL_HORIZONTAL | wx.SL_LABELS)
         self.btn_light2.Disable()
@@ -43,7 +43,7 @@ class Principal(wx.Frame):
 
         # Light3
         self.lbl_title3 = wx.StaticText(self, wx.ID_ANY, "LIGHT 3", pos=(10,290), size=(80,25))
-        self.lbl_state3 = wx.StaticText(self, wx.ID_ANY, "The light 1 is ON", pos=(10,320), size=(150,25))
+        self.lbl_state3 = wx.StaticText(self, wx.ID_ANY, "The light 3 is ON", pos=(10,320), size=(150,25))
         self.btn_light3 = wx.Button(self, wx.ID_ANY, label = "ON", pos=(300,340), size=(40,30))
         self.sld3 = wx.Slider(self, -1, 50, 0, 100, (10, 340), (250, -1),wx.SL_AUTOTICKS | wx.SL_HORIZONTAL | wx.SL_LABELS)
         self.btn_light3.Disable()
@@ -129,13 +129,13 @@ class Principal(wx.Frame):
         if (state1== "ON"):
             self.sld1.Enable()
             self.btn_light1.SetLabel("OFF")
-            self.lbl_prueba.SetLabelText("The light 1 is ON")
+            self.lbl_state1.SetLabelText("The light 1 is ON")
             val = 100
             
         if (state1== "OFF"):
             self.sld1.Disable()
             self.btn_light1.SetLabel("ON")
-            self.lbl_prueba.SetLabelText("The light 1 is OFF")
+            self.lbl_state1.SetLabelText("The light 1 is OFF")
             val = 0
         topic = "dom/light1"
         #self.btn_light1.Enable()
@@ -146,13 +146,13 @@ class Principal(wx.Frame):
         if (state2== "ON"):
             self.sld2.Enable()
             self.btn_light2.SetLabel("OFF")
-            self.lbl_prueba.SetLabelText("The light 2 is ON")
+            self.lbl_state2.SetLabelText("The light 2 is ON")
             val = 100
             
         if (state2== "OFF"):
             self.sld2.Disable()
             self.btn_light2.SetLabel("ON")
-            self.lbl_prueba.SetLabelText("The light 2 is OFF")
+            self.lbl_state2.SetLabelText("The light 2 is OFF")
             val = 0
         topic = "dom/light2"
         self.mqtt_class.send_mqtt(val, topic)           # Send data to mqtt class
@@ -162,13 +162,13 @@ class Principal(wx.Frame):
         if (state3== "ON"):
             self.sld3.Enable()
             self.btn_light3.SetLabel("OFF")
-            self.lbl_prueba.SetLabelText("The light 3 is ON")
+            self.lbl_state3.SetLabelText("The light 3 is ON")
             val = 100
             
         if (state3== "OFF"):
             self.sld3.Disable()
             self.btn_light3.SetLabel("ON")
-            self.lbl_prueba.SetLabelText("The light 3 is OFF")
+            self.lbl_state3.SetLabelText("The light 3 is OFF")
             val = 0
         topic = "dom/light3"
         self.mqtt_class.send_mqtt(val, topic)           # Send data to mqtt class
@@ -251,6 +251,7 @@ class MQTT_Config(wx.Frame):
             self.txt_user.Disable()
             self.txt_pass.Disable()
             self.txt_topic.Disable()
+            self.Close()
   
     def send_mqtt(self, val, topic):
         self.val = val
@@ -273,6 +274,7 @@ class MQTT_Config(wx.Frame):
         self.txt_user.Enable()
         self.txt_pass.Enable()
         self.txt_topic.Enable()
+        self.Close()
         
     ####### FUNCTION ON CONNECT ######
     def on_connect(self,client, userdata, flags, rc):
